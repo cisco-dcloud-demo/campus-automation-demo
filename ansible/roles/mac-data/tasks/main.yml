@@ -1,0 +1,5 @@
+---
+- name: Include workspace variables
+  ansible.builtin.include_vars:
+    file: "{{ workspace_vars_dir }}/{{ workspace }}.yaml"
+    name: mac_data

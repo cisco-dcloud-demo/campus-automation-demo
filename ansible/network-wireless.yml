@@ -1,0 +1,31 @@
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  roles: 
+    - role: mac-data
+  tasks:
+    - name: Get all networks
+      cisco.meraki.networks_info:
+        meraki_api_key: "{{ lookup('ansible.builtin.env', 'MERAKI_DASHBOARD_API_KEY') }}"
+        meraki_base_url: "{{ lookup('ansible.builtin.env', 'MERAKI_BASE_URL', default=omit) }}"
+        organizationId: "{{ lookup('ansible.builtin.env', 'MERAKI_ORG_ID') }}"
+        tags: "{{ mac_data.meraki_network_tags | default(omit) }}"
+        total_pages: -1
+      register: networks_info
+
+    - name: Create the data structure for module
+      set_fact:
+        product_list: "{{ product_list | default([]) + [{'networkId': item.0.id, 'ssid': item.1}] }}"
+      with_nested:
+        - "{{ networks_info.meraki_response }}"
+        - "{{ mac_data.networks.wireless.ssids }}"
+
+    - name: Update Target Network Wireless SSIDs
+      cisco.meraki.networks_wireless_ssids: "{{ item.ssid | combine(add_keys) }}"
+      loop: "{{ product_list }}"
+      vars:
+        add_keys:
+          state: present
+          meraki_api_key: "{{ lookup('ansible.builtin.env', 'MERAKI_DASHBOARD_API_KEY') }}"
+          meraki_base_url: "{{ lookup('ansible.builtin.env', 'MERAKI_BASE_URL', default=omit) }}"
+          networkId: "{{ item.networkId }}"

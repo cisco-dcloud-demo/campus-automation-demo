@@ -1,0 +1,156 @@
+meraki_base_url: "https://api.meraki.com/api/v1"
+meraki_org_id: 572081
+meraki_network_tags: ["tf_test"]
+ssids:
+    - number: 0
+      name: "cpn"
+      enabled: true
+      splashPage: Cisco ISE
+      # ssidAdminAccessible: false
+      authMode: 8021x-radius
+      dot11w:
+        enabled: false
+        required: false
+      dot11r:
+        enabled: false
+        adaptive: false
+      # encryptionMode: wpa-eap
+      wpaEncryptionMode: WPA2 only
+      radiusServers:
+        - host: 100.100.80.27
+          port: 1812
+          secret: "x4r6T7FWe6QmqN29"
+          radsecEnabled: false
+      radiusAccountingEnabled: true
+      radiusAccountingServers:
+        - host: 100.100.80.27
+          port: 1813
+          secret: "x4r6T7FWe6QmqN29"
+          radsecEnabled: false
+      radiusTestingEnabled: false
+      radiusServerTimeout: 1
+      radiusServerAttemptsLimit: 3
+      radiusFallbackEnabled: false
+      radiusAccountingInterimInterval: 600
+      radiusProxyEnabled: false
+      radiusCoaEnabled: true
+      radiusCalledStationId: '$NODE_MAC$:$VAP_NAME$'
+      radiusAuthenticationNasId: '$NODE_MAC$:$VAP_NUM$'
+      radiusAttributeForGroupPolicies: Filter-Id
+      ipAssignmentMode: Bridge mode
+      useVlanTagging: false
+      radiusOverride: false
+      # adminSplashUrl: null
+      # splashTimeout: 1440 minutes
+      walledGardenEnabled: false
+      minBitrate: 11
+      bandSelection: Dual band operation
+      # perClientBandwidthLimitUp: 0
+      # perClientBandwidthLimitDown: 0
+      # perSsidBandwidthLimitUp: 0
+      # perSsidBandwidthLimitDown: 0
+      mandatoryDhcpEnabled: false
+      lanIsolationEnabled: false
+      visible: true
+      availableOnAllAps: true
+      availabilityTags: []
+      speedBurst:
+        enabled: false
+
+  # - admin_splash_url: ""
+  #   auth_mode: "open-with-radius"
+  #   availability_tags: null
+  #   available_on_all_aps: true
+  #   band_selection: "Dual band operation"
+  #   enabled: false
+  #   encryption_mode: ""
+  #   ip_assignment_mode: "Layer 3 roaming"
+  #   local_auth: null
+  #   mandatory_dhcp_enabled: true
+  #   min_bitrate: 11
+  #   name: "cpn-guest"
+  #   number: 1
+  #   per_client_bandwidth_limit_down: 0
+  #   per_client_bandwidth_limit_up: 0
+  #   per_ssid_bandwidth_limit_down: 0
+  #   per_ssid_bandwidth_limit_up: 0
+  #   radius_accounting_enabled: true
+  #   radius_accounting_servers:
+  #     - ca_certificate: ""
+  #       host: "100.100.80.27"
+  #       open_roaming_certificate_id: null
+  #       secret: "x4r6T7FWe6QmqN29"
+  #       port: 1813
+  #   radius_attribute_for_group_policies: "Filter-Id"
+  #   radius_enabled: null
+  #   radius_servers:
+  #     - ca_certificate: ""
+  #       host: "100.100.80.27"
+  #       open_roaming_certificate_id: null
+  #       secret: "x4r6T7FWe6QmqN29"
+  #       port: 1812
+  #   splash_page: "Cisco ISE"
+  #   splash_timeout: "1440 minutes"
+  #   ssid_admin_accessible: false
+  #   use_vlan_tagging: false
+  #   visible: true
+  #   walled_garden_enabled: true
+  #   walled_garden_ranges:
+  #     - "172.31.2.21/32"
+  #     - "172.31.2.23/32"
+  #     - "captive.apple.com"
+  #     - "*.apple.com"
+  #     - "*.appleiphonecell.com"
+  #     - "*.ibook.info"
+  #     - "*.itools.info"
+  #     - "*.airport.us"
+  #     - "*.thinkdifferent.us"
+  #     - "clients3.google.com"
+  #     - "*.gstatic.com"
+
+  # - admin_splash_url: ""
+  #   auth_mode: "ipsk-with-radius"
+  #   availability_tags: null
+  #   available_on_all_aps: true
+  #   band_selection: "Dual band operation"
+  #   enabled: true
+  #   encryption_mode: "wpa"
+  #   ip_assignment_mode: "Layer 3 roaming"
+  #   local_auth: null
+  #   mandatory_dhcp_enabled: false
+  #   min_bitrate: 11
+  #   name: "cpn-iot"
+  #   number: 2
+  #   per_client_bandwidth_limit_down: 0
+  #   per_client_bandwidth_limit_up: 0
+  #   per_ssid_bandwidth_limit_down: 0
+  #   per_ssid_bandwidth_limit_up: 0
+  #   radius_accounting_enabled: true
+  #   radius_accounting_servers:
+  #     - ca_certificate: ""
+  #       host: "172.31.2.21"
+  #       open_roaming_certificate_id: null
+  #       port: 1813
+  #     - ca_certificate: ""
+  #       host: "172.31.2.23"
+  #       open_roaming_certificate_id: null
+  #       port: 1813
+  #   radius_attribute_for_group_policies: "Filter-Id"
+  #   radius_enabled: null
+  #   radius_servers:
+  #     - ca_certificate: ""
+  #       host: "172.31.2.21"
+  #       open_roaming_certificate_id: null
+  #       port: 1812
+  #     - ca_certificate: ""
+  #       host: "172.31.2.23"
+  #       open_roaming_certificate_id: null
+  #       port: 1812
+  #   splash_page: "None"
+  #   splash_timeout: ""
+  #   ssid_admin_accessible: false
+  #   visible: true
+  #   walled_garden_enabled: null
+  #   walled_garden_ranges: null
+  #   wpa_encryption_mode: "WPA2 only"
+

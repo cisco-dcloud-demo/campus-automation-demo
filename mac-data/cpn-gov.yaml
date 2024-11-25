@@ -1,0 +1,273 @@
+meraki_org_id: 1155173304420532452
+meraki_base_url: "https://api.gov-meraki.com/api/v1"
+# meraki_network_tags: ["tf_test"]
+meraki_network_tags: ["branch"]
+networks:
+  syslogServers:
+    servers:
+      - host: 199.66.188.19
+        port: '514'
+        roles:
+          - Flows
+          - URLs
+          - Wireless event log
+          - Switch event log
+          - Security events
+          - Appliance event log
+  netflow:
+    reportingEnabled: true
+    collectorIp: "199.66.188.243"
+    collectorPort: 2055
+    etaEnabled: false
+  appliance:
+    vpn:
+      siteToSiteVpn:
+        mode: spoke
+        hubs:
+          - hubId: L_1155173304420540560
+            useDefaultRoute: false
+  switch:
+    accessPolicies:
+      - accessPolicyNumber: '1'
+        name: 8021X_Multi_Auth_Hybrid
+        guestPortBouncing: false
+        radiusGroupAttribute: '11'
+        radius:
+          # criticalAuth:
+          #   dataVlanId: 
+          #   voiceVlanId: 
+          #   suspendPortBounce: false
+          # failedAuthVlanId: 
+          # reAuthenticationInterval: 
+        radiusCoaSupportEnabled: true
+        radiusAccountingEnabled: true
+        radiusTestingEnabled: false
+        radiusServers:
+          - host: 100.100.80.27
+            port: 1812
+            secret: "x4r6T7FWe6QmqN29"
+        radiusAccountingServers:
+          - host: 100.100.80.27
+            port: 1813
+            secret: "x4r6T7FWe6QmqN29"
+        hostMode: Multi-Auth
+        accessPolicyType: Hybrid authentication
+        # authenticationMethod: my RADIUS server
+        increaseAccessSpeed: false
+        # guestVlanId: 
+        voiceVlanClients: true
+        urlRedirectWalledGardenEnabled: false
+        dot1x:
+          controlDirection: both
+  wireless:
+    ssids:
+      - number: 0
+        name: "cpn-gov"
+        enabled: true
+        splashPage: Cisco ISE
+        # ssidAdminAccessible: false
+        authMode: 8021x-radius
+        dot11w:
+          enabled: false
+          required: false
+        dot11r:
+          enabled: false
+          adaptive: false
+        # encryptionMode: wpa-eap
+        wpaEncryptionMode: WPA2 only
+        radiusServers:
+          - host: 100.100.80.27
+            port: 1812
+            secret: "x4r6T7FWe6QmqN29"
+            radsecEnabled: false
+        radiusAccountingEnabled: true
+        radiusAccountingServers:
+          - host: 100.100.80.27
+            port: 1813
+            secret: "x4r6T7FWe6QmqN29"
+            radsecEnabled: false
+        radiusTestingEnabled: false
+        radiusServerTimeout: 1
+        radiusServerAttemptsLimit: 3
+        radiusFallbackEnabled: false
+        radiusAccountingInterimInterval: 600
+        radiusProxyEnabled: false
+        radiusCoaEnabled: true
+        radiusCalledStationId: '$NODE_MAC$:$VAP_NAME$'
+        radiusAuthenticationNasId: '$NODE_MAC$:$VAP_NUM$'
+        radiusAttributeForGroupPolicies: Filter-Id
+        ipAssignmentMode: Bridge mode
+        useVlanTagging: false
+        radiusOverride: false
+        # adminSplashUrl: null
+        # splashTimeout: 1440 minutes
+        walledGardenEnabled: false
+        minBitrate: 11
+        bandSelection: Dual band operation
+        # perClientBandwidthLimitUp: 0
+        # perClientBandwidthLimitDown: 0
+        # perSsidBandwidthLimitUp: 0
+        # perSsidBandwidthLimitDown: 0
+        mandatoryDhcpEnabled: false
+        lanIsolationEnabled: false
+        visible: true
+        availableOnAllAps: true
+        availabilityTags: []
+        speedBurst:
+          enabled: false
+
+      # - admin_splash_url: ""
+      #   auth_mode: "8021x-radius"
+      #   availability_tags: null
+      #   available_on_all_aps: true
+      #   band_selection: "Dual band operation"
+      #   enabled: true
+      #   encryption_mode: "wpa-eap"
+      #   ip_assignment_mode: "Layer 3 roaming"
+      #   local_auth: null
+      #   mandatory_dhcp_enabled: true
+      #   min_bitrate: 11
+      #   name: "cpn"
+      #   number: 0
+      #   per_client_bandwidth_limit_down: 0
+      #   per_client_bandwidth_limit_up: 0
+      #   per_ssid_bandwidth_limit_down: 0
+      #   per_ssid_bandwidth_limit_up: 0
+      #   radius_accounting_enabled: true
+      #   radius_accounting_servers:
+      #     - ca_certificate: ""
+      #       host: "100.100.80.27"
+      #       open_roaming_certificate_id: null
+      #       secret: "x4r6T7FWe6QmqN29"
+      #       port: 1813
+      #   radius_attribute_for_group_policies: "Filter-Id"
+      #   radius_enabled: null
+      #   radius_servers:
+      #     - ca_certificate: ""
+      #       host: "100.100.80.27"
+      #       open_roaming_certificate_id: null
+      #       secret: "x4r6T7FWe6QmqN29"
+      #       port: 1812
+      #   splash_page: "None"
+      #   splash_timeout: ""
+      #   ssid_admin_accessible: false
+      #   use_vlan_tagging: false
+      #   visible: true
+      #   walled_garden_enabled: null
+      #   walled_garden_ranges: null
+      #   wpa_encryption_mode: "WPA2 only"
+  groupPolicies:
+    - name: Employee
+      scheduling:
+        enabled: false
+        monday:
+          active: true
+          from: '00:00'
+          to: '24:00'
+        tuesday:
+          active: true
+          from: '00:00'
+          to: '24:00'
+        wednesday:
+          active: true
+          from: '00:00'
+          to: '24:00'
+        thursday:
+          active: true
+          from: '00:00'
+          to: '24:00'
+        friday:
+          active: true
+          from: '00:00'
+          to: '24:00'
+        saturday:
+          active: true
+          from: '00:00'
+          to: '24:00'
+        sunday:
+          active: true
+          from: '00:00'
+          to: '24:00'
+      bandwidth:
+        settings: network default
+        bandwidthLimits:
+          limitUp: null
+          limitDown: null
+      firewallAndTrafficShaping:
+        settings: network default
+        trafficShapingRules: []
+        l3FirewallRules: []
+        l7FirewallRules: []
+      contentFiltering:
+        allowedUrlPatterns:
+          settings: network default
+          patterns: []
+        blockedUrlPatterns:
+          settings: network default
+          patterns: []
+        blockedUrlCategories:
+          settings: network default
+          categories: []
+      splashAuthSettings: network default
+      vlanTagging:
+        settings: network default
+      bonjourForwarding:
+        settings: network default
+        rules: []
+    - name: Contractor
+      scheduling:
+        enabled: false
+        monday:
+          active: true
+          from: '00:00'
+          to: '24:00'
+        tuesday:
+          active: true
+          from: '00:00'
+          to: '24:00'
+        wednesday:
+          active: true
+          from: '00:00'
+          to: '24:00'
+        thursday:
+          active: true
+          from: '00:00'
+          to: '24:00'
+        friday:
+          active: true
+          from: '00:00'
+          to: '24:00'
+        saturday:
+          active: true
+          from: '00:00'
+          to: '24:00'
+        sunday:
+          active: true
+          from: '00:00'
+          to: '24:00'
+      bandwidth:
+        settings: network default
+        bandwidthLimits:
+          limitUp: null
+          limitDown: null
+      firewallAndTrafficShaping:
+        settings: network default
+        trafficShapingRules: []
+        l3FirewallRules: []
+        l7FirewallRules: []
+      contentFiltering:
+        allowedUrlPatterns:
+          settings: network default
+          patterns: []
+        blockedUrlPatterns:
+          settings: network default
+          patterns: []
+        blockedUrlCategories:
+          settings: network default
+          categories: []
+      splashAuthSettings: network default
+      vlanTagging:
+        settings: network default
+      bonjourForwarding:
+        settings: network default
+        rules: []

@@ -1,0 +1,114 @@
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  roles: 
+    - role: mac-data
+      tags: 
+        - always
+  tasks:
+    - name: Get all networks
+      cisco.meraki.networks_info:
+        meraki_base_url: "{{ meraki_base_url }}"
+        meraki_api_key: "{{ meraki_api_key }}"
+        organizationId: "{{ lookup('ansible.builtin.env', 'MERAKI_ORG_ID') }}"
+        tags: "{{ mac_data.meraki_network_tags | default(omit) }}"
+        total_pages: -1
+      register: networks_info
+      tags:
+        - always
+
+    - name: Create data for group policies
+      set_fact:
+        group_policies: "{{ group_policies | default([]) + [{'networkId': item.0.id, 'policy': item.1}] }}"
+      with_nested:
+        - "{{ networks_info.meraki_response }}"
+        - "{{ mac_data.networks.groupPolicies }}"
+
+    - name: Update Group Policies
+      cisco.meraki.networks_group_policies: "{{ module_data }}"
+      loop: "{{ group_policies }}"
+      vars:
+        add_keys:
+          state: present
+          meraki_base_url: "{{ meraki_base_url }}"
+          meraki_api_key: "{{ meraki_api_key }}"
+          networkId: "{{ item.networkId }}"
+        module_data: '{{ item.policy | combine(add_keys) }}'
+      tags:
+        - group_policies
+
+    # - block:
+    #   - name: Get Curret Group Policy
+    #     cisco.meraki.networks_group_policies_info:
+    #       meraki_base_url: "{{ meraki_base_url }}"
+    #       meraki_api_key: "{{ lookup('my_secret', meraki_api_key ) }}"
+    #       networkId: "{{ networkId }}"
+    #     register: group_policies_info
+
+    #   - name: Update Group Policy
+    #     # debug:
+    #     #   msg: "{{ item | combine(add_keys) }}"
+    #     cisco.meraki.networks_group_policies: "{{ combined_item }}"
+    #     loop: '{{ meraki_data["networks"]["groupPolicies"] }}'
+    #     vars:
+    #       add_keys:
+    #         state: present
+    #         meraki_base_url: "{{ meraki_base_url }}"
+    #         meraki_api_key: "{{ lookup('my_secret', meraki_api_key ) }}"
+    #         networkId: "{{ networkId }}"
+    #         # Add groupPolicyId from the info if it is there
+    #         groupPolicyId: '{{ group_policy_lookup[item["name"]] | default(omit) }}'
+    #       combined_item: "{{ item | combine(add_keys) }}"
+    #       group_policy_lookup: "{{ group_policies_info.meraki_response | jq_filter('map({(.name): (.groupPolicyId | tonumber)}) | add') | first }}"
+    #   tags:
+    #     - group_policy
+
+    - name: Create data for switch access policies
+      set_fact:
+        access_policies: "{{ access_policies | default([]) + [{'networkId': item.0.id, 'policy': item.1}] }}"
+      with_nested:
+        - "{{ networks_info.meraki_response }}"
+        - "{{ mac_data.networks.switch.accessPolicies }}"
+
+    - name: Update Access Policies
+      cisco.meraki.networks_switch_access_policies: "{{ module_data }}"
+      loop: "{{ access_policies }}"
+      vars:
+        add_keys:
+          state: present
+          meraki_base_url: "{{ meraki_base_url }}"
+          meraki_api_key: "{{ meraki_api_key }}"
+          networkId: "{{ item.networkId }}"
+        module_data: '{{ item.policy | combine(add_keys) }}'
+      tags:
+        - access_policies
+
+    - name: Update Network Syslog Servers
+      cisco.meraki.networks_syslog_servers: "{{ module_data }}"
+      loop: "{{ networks_info.meraki_response }}"
+      vars:
+        add_keys:
+          meraki_base_url: "{{ meraki_base_url }}"
+          meraki_api_key: "{{ meraki_api_key }}"
+          networkId: "{{ item.id }}"
+        module_data: '{{ mac_data.networks.syslogServers | combine(add_keys) }}'
+        radius_secret: "{{ lookup('amazon.aws.secretsmanager_secret', 'cpn/ise.radius_secret', nested=true) }}"
+      tags:
+        - syslog
+
+    - name: Update Network Netflow Servers
+      cisco.meraki.networks_netflow: "{{ module_data }}"
+      loop: "{{ networks_info.meraki_response }}"
+      when: '"appliance" in item.productTypes'
+      vars:
+        add_keys:
+          meraki_base_url: "{{ meraki_base_url }}"
+          meraki_api_key: "{{ meraki_api_key }}"
+          networkId: "{{ item.id }}"
+        module_data: '{{ mac_data.networks.netflow | combine(add_keys) }}'
+        # radius_secret: "{{ lookup('amazon.aws.secretsmanager_secret', 'cpn/ise.radius_secret', nested=true) }}"
+      tags:
+        - netflow
+
+    - debug:
+        var: access_policies

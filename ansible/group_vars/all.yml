@@ -1,0 +1,4 @@
+meraki_api_key: "{{ lookup('ansible.builtin.env', 'MERAKI_DASHBOARD_API_KEY') }}"
+meraki_base_url: "{{ lookup('ansible.builtin.env', 'MERAKI_BASE_URL', default=omit) }}"
+workspace: ''
+workspace_vars_dir: '../mac-data'
