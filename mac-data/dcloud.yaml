@@ -1,0 +1,16 @@
+meraki_base_url: "https://api.meraki.com/api/v1"
+meraki_org_id: 618681998810021964
+meraki_network_tags: ["tf_test"]
+ssids:
+    - number: 1
+      name: "PSeudoCo-P101-CORP"
+      profile: "CORP_SSID"
+      enabled: true
+      authMode: psk
+      psk: "C1sco12345!"
+      # encryptionMode: wpa-eap
+      wpaEncryptionMode: WPA2 only
+      ipAssignmentMode: Bridge mode
+      useVlanTagging: false
+      vlanId: 11
+      visible: true

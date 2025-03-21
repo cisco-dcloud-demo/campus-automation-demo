@@ -1,4 +1,11 @@
 ---
+- name: Check for workspace name
+  ansible.builtin.assert:
+    that:
+      - workspace is defined
+      - workspace
+    fail_msg: "You must specify a workspace name (e.g. -e workspace=test)"
+
 - name: Include workspace variables
   ansible.builtin.include_vars:
     file: "{{ workspace_vars_dir }}/{{ workspace }}.yaml"
