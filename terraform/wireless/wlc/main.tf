@@ -44,9 +44,6 @@ locals {
       ])[0]
     }
   ]
-}
-
-locals {
   wlcs_devices = [
     for device in local.device_info : {
       name = device.serial
@@ -61,43 +58,33 @@ provider "iosxe" {
   devices  = local.wlcs_devices
 }
 
-resource "iosxe_restconf" "nested_list" {
-  path = "Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wlan-cfg-entries"
-  lists = [{
+locals {
+  wlan_cfg_entries = [{
     name = "wlan-cfg-entry"
     key  = "profile-name"
     items = [
       for idx, ssid in var.cfg.ssids : {
-        "profile-name"                  = try(ssid.profile, ssid.name)
-        "wlan-id"                       = ssid.number  # Auto-increment WLAN ID starting from 1
-        "auth-key-mgmt-psk"             = try(ssid.auth_psk, true)    # Default to true if not specified
-        "auth-key-mgmt-dot1x"           = try(ssid.auth_dot1x, false) # Default to false if not specified
-        "psk"                           = ssid.psk
-        "apf-vap-id-data/ssid"          = ssid.name
-        "apf-vap-id-data/wlan-status"   = try(ssid.status, true) # Default to true if not specified
+        "profile-name"        = try(ssid.profile, ssid.name)
+        "wlan-id"             = ssid.number
+        "auth-key-mgmt-psk"   = try(ssid.auth_psk, true)
+        "auth-key-mgmt-dot1x" = try(ssid.auth_dot1x, false)
+        "psk"                 = ssid.psk
+        "apf-vap-id-data/ssid"         = ssid.name
+        "apf-vap-id-data/wlan-status"  = try(ssid.status, true)
       }
     ]
   }]
 }
 
-# resource "iosxe_restconf" "nested_list" {
-#   path = "Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wlan-cfg-entries"
-#   lists = [{
-#     name = "wlan-cfg-entry"
-#     key  = "profile-name"
-#     items = [
-#       {
-#         "profile-name" = "cpn-test",
-#         "wlanå-id" = 1,
-#         "auth-key-mgmt-psk" = true,
-#         "auth-key-mgmt-dot1x" = false,
-#         "psk" = "Cisc0123#"
-#         "apf-vap-id-data/ssid" = "cpn-test",
-#         "apf-vap-id-data/wlan-status" = true
-#       }
-#     ]
-#   }]
-# }
+resource "iosxe_restconf" "nested_list" {
+  path = "Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wlan-cfg-entries"
+  attributes = {}
+  lists = local.wlan_cfg_entries
+}
+
+output "wlan_cfg_entries" {
+  value = local.wlan_cfg_entries
+}
 
 variable "cfg" {
   type        = any

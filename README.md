@@ -35,7 +35,7 @@ While it is not mandatory to store configuration data in a Source Control Manage
 - **Audit Trail:** Keep a detailed record of who changed what and when, which is crucial for accountability and troubleshooting.
 
 ## Flow Overview
-![Meraki Configuration Diagram](mac.png)
+![Meraki Configuration Diagram](overview.png)
 
 ## Workspaces
 
@@ -100,6 +100,42 @@ ssids:
       visible: true
 ```
 
+## Data Translation
+In the repo, we highlight automating a hybrid network of
+devices in both managed and monitored mode.  For monitored
+devices, we can take advantage of the fact that the Meraki
+dashboard API has the information for the devices in it's
+inventory.  This allows us to both know that the device is there and how to communicate with it.
+
+The issue is that the Meraki Dashboard uses different data model from the monitored IOS XE devices.  Instead of keeping the configuration data in two different formats, it is
+translated as it is sent to the particular API.  As 
+
+![Meraki Configuration Diagram](translate.png)
+
+For example, this repo keeps is configuration data in the
+form accepted by the Meraki Api.  Therefore, the Terraform
+that sends configuration data to the IOS-XE device translates
+the data appropriately.
+
+```
+locals {
+  wlan_cfg_entries = [{
+    name = "wlan-cfg-entry"
+    key  = "profile-name"
+    items = [
+      for idx, ssid in var.cfg.ssids : {
+        "profile-name"        = try(ssid.profile, ssid.name)
+        "wlan-id"             = ssid.number
+        "auth-key-mgmt-psk"   = try(ssid.auth_psk, true)
+        "auth-key-mgmt-dot1x" = try(ssid.auth_dot1x, false)
+        "psk"                 = ssid.psk
+        "apf-vap-id-data/ssid"         = ssid.name
+        "apf-vap-id-data/wlan-status"  = try(ssid.status, true)
+      }
+    ]
+  }]
+}
+```
 
 # Wireless Configuration with Terraform
 
