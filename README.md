@@ -227,3 +227,5 @@ Use a version control system like Git to manage your configuration files, enabli
 Whenever possible, test configuration changes in a staging environment before applying them to production.
 By following these guidelines, you can effectively manage and deploy your wireless configuration using Terraform. If you encounter persistent issues, consult the Terraform community or open an issue in the repository for further assistance.
 
+## Excercises
+- [dCloud (Cisco Internal)](dcloud.md)
