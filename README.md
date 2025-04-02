@@ -1,5 +1,18 @@
 # Meraki-As-Code
 
+## Table of Contents
+- [Background](#background)
+  - [Benefits of Meraki IaC](#benefits-of-meraki-iac)
+  - [Configuration Data](#configuration-data)
+  - [Configuration Management](#configuration-management)
+  - [Flow Overview](#flow-overview)
+  - [Workspaces](#workspaces)
+  - [Repo Layout](#repo-layout)
+  - [Data Translation](#data-translation)
+- [Using the Repo](#using-the-repo)
+  - [Wireless Configuration with Terraform](#wireless-configuration-with-terraform)
+- [Exercises](#exercises)
+
 ## Background
 
 The **Meraki-As-Code** repository provides a streamlined procedure for configuring a Meraki network using Infrastructure as Code (IaC) tools such as Terraform, Ansible, and Python. The primary goal is to separate the configuration data—which represents the state and settings of your network—from the configuration code that applies these settings. This approach enables you to leverage multiple tools in parallel, allowing each to excel at the tasks it handles best, without being limited by the delivery mechanism.
@@ -39,14 +52,14 @@ While it is not mandatory to store configuration data in a Source Control Manage
 
 ## Workspaces
 
-This repository also introduces the concept of **workspaces**. Workspaces allow you to manage different contexts or environments (such as development, staging, and production) within the same codebase. This separation enables:
+This repository uses the concept of **workspaces**, which is fmailier in Terraform, but can also be used with Ansible and Puthon implementation. Workspaces allow you to manage different contexts or environments (such as development, staging, and production) within the same codebase. This separation enables:
 - **Environment Isolation:** Each workspace can be configured independently, ensuring that changes in one environment do not inadvertently affect another.
 - **Parallel Development:** Teams can work on different environments simultaneously, which improves efficiency and reduces deployment risks.
 - **Clear Organization:** Workspaces provide a structured approach to managing multiple configurations, making it easier to track and implement environment-specific settings.
 
 
-## Repo layout
-```
+## Repo Layout
+```text
 .
 ├── LICENSE
 ├── README.md
@@ -69,55 +82,27 @@ This repository also introduces the concept of **workspaces**. Workspaces allow 
 ├── requirements.txt
 ```
 
-All of the data is kept in the `mac-data` directory at the root level of the repo.  This allow other tooling
-outside of terraform to access it.  Within the terraform directory, the tooling is separated by area (e.g. wireless, SD-WAN), etc.)
-
-
-## How To
-
-** Note: Add SSID data from file **
-
-### Configuration Data
-The first step is to is to manage the data in the `mac-data` directory for the workspace that you are wanting
-to chance.
-
-```
-meraki_base_url: "https://api.meraki.com/api/v1"
-meraki_org_id: 618681998810021964
-meraki_network_tags: ["tf_test"]
-ssids:
-    - number: 1
-      name: "PSeudoCo-P101-CORP"
-      profile: "CORP_SSID"
-      enabled: true
-      authMode: psk
-      psk: "C1sco12345!"
-      # encryptionMode: wpa-eap
-      wpaEncryptionMode: WPA2 only
-      ipAssignmentMode: Bridge mode
-      useVlanTagging: false
-      vlanId: 11
-      visible: true
-```
+All of the data is kept in the `mac-data` directory at the root level of the repo. This allows other tooling
+outside of terraform to access it. Within the terraform directory, the tooling is separated by area (e.g., wireless, SD-WAN, etc.).
 
 ## Data Translation
 In the repo, we highlight automating a hybrid network of
-devices in both managed and monitored mode.  For monitored
+devices in both managed and monitored mode. For monitored
 devices, we can take advantage of the fact that the Meraki
-dashboard API has the information for the devices in it's
-inventory.  This allows us to both know that the device is there and how to communicate with it.
+dashboard API has the information for the devices in its
+inventory. This allows us to both know that the device is there and how to communicate with it.
 
-The issue is that the Meraki Dashboard uses different data model from the monitored IOS XE devices.  Instead of keeping the configuration data in two different formats, it is
-translated as it is sent to the particular API.  As 
+The issue is that the Meraki Dashboard uses a different data model from the monitored IOS XE devices. Instead of keeping the configuration data in two different formats, it is
+translated as it is sent to the particular API.
 
 ![Meraki Configuration Diagram](translate.png)
 
-For example, this repo keeps is configuration data in the
-form accepted by the Meraki Api.  Therefore, the Terraform
+For example, this repo keeps its configuration data in the
+form accepted by the Meraki API. Therefore, the Terraform
 that sends configuration data to the IOS-XE device translates
 the data appropriately.
 
-```
+```hcl
 locals {
   wlan_cfg_entries = [{
     name = "wlan-cfg-entry"
@@ -137,6 +122,33 @@ locals {
 }
 ```
 
+## Using the Repo
+
+### Configuration Data
+The first step is to manage the data in the `mac-data` directory for the workspace that you are wanting
+to change.
+
+```yaml
+meraki_base_url: "https://api.meraki.com/api/v1"
+meraki_org_id: XXXXXXXXXXXXXXXXXX
+meraki_network_tags: ["tf_test"]
+ssids:
+    - number: 1
+      name: "PSeudoCo-P101-CORP"
+      profile: "CORP_SSID"
+      enabled: true
+      authMode: psk
+      psk: "C1sco12345!"
+      # encryptionMode: wpa-eap
+      wpaEncryptionMode: WPA2 only
+      ipAssignmentMode: Bridge mode
+      useVlanTagging: false
+      vlanId: 11
+      visible: true
+```
+
+
+
 # Wireless Configuration with Terraform
 
 This document outlines how to deploy the wireless configuration using Terraform. The configuration files are located in the `terraform/wireless` directory. Below are the prerequisites, steps to initialize, plan, and apply the configuration, as well as troubleshooting tips.
@@ -144,7 +156,7 @@ This document outlines how to deploy the wireless configuration using Terraform.
 ## Prerequisites
 
 - **Terraform Installation**:  
-  Ensure that Terraform is installed on your system. You can download it from [terraform.io](https://www.terraform.io/downloads.html).
+  Ensure that Terraform (version 1.0.0 or higher) is installed on your system. You can download it from [terraform.io](https://www.terraform.io/downloads.html).
 
 - **Access Credentials and Permissions**:  
   Verify that you have the necessary credentials (e.g., API keys, environment variables) and permissions to push changes to your wireless infrastructure.
@@ -227,5 +239,6 @@ Use a version control system like Git to manage your configuration files, enabli
 Whenever possible, test configuration changes in a staging environment before applying them to production.
 By following these guidelines, you can effectively manage and deploy your wireless configuration using Terraform. If you encounter persistent issues, consult the Terraform community or open an issue in the repository for further assistance.
 
-## Excercises
+## Exercises
 - [dCloud (Cisco Internal)](dcloud.md)
+- Additional exercises coming soon
