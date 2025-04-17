@@ -8,12 +8,26 @@ The dCloud pod is already setup with SSIDs, but the SSIDs are different for ever
 
 ### Collecting Needed Values
 #### After logging into dCloud, open a Web RDP session to the Jump Host
-#### Open Chrome and navagate to `Dashboard` on the time line bookmarks
-- Note `Meraki Org ID`
-- Note `API Key`
 #### Open the document named `SESSION_INFO` and look for the POD-specific SSIDs and PSKs:
 - Look for `Yor POD-specific Wireless SSIDs:` (e.g. `PSeudoCo-P101-BR1-CORP`). You are pod 101 in this exmple
 - Look for `PSK for Wireless SSIDs` and note the value.
+#### Open Chrome and navagate to `Dashboard` on the time line bookmarks
+- Note `Meraki Org ID`
+- Note `API Key`
+
+
+### Verify the starting state of the POD:
+- On the "Jump Host", go to Chrome->Dashboard->Cisco Meraki->View
+    - In the Meraki Dashboard, choose a networks (e.g. Branch1)
+    - Choose Wireless->Configure->SSIDs
+    - ![Meraki Before](meraki-before.png)
+    - Network two should be `PSeudoCo-P101-BR1-CORP` if you are pod 101.  The `BR1` (if you chose the `Branch1` network) should be in the SSID.
+- On the "Jump Host", go to Chrome->Branch3-C9800L-WLC
+    - Log in with the POD credentials
+    - Nagivate to Configuration->Tags & Profiles->WLANs
+    - ![Meraki Before](wlc-before.png)
+    - The Corpoorate SSID should be `PSeudoCo-P101-BR3-CORP`
+ 
 ### Running the Tooling
 #### Options for a host from which to run the tooling
 - Log in to the "Jump Host".  Using mRemoteNG, navigate to "Virtual Machines"->"Script Server"
@@ -26,23 +40,17 @@ git clone https://github.com/cisco-dcloud-demo/campus-automation-demo.git
 - Change the `name` of ssid 1 to `PSeudoCo-P<Your POD number>-CORP` (i.e. Remove the `BR#`)
 - Change the `psk` of ssid 1 to the PSK found in `SESSION_INFO`
 - Change `meraki_org_id` to the value found in the "Dashboard" above
-### Verify the starting state of the POD:
-- On the "Jump Host", go to Chrome->Dashboard->Cisco Meraki->View
-    - In the Meraki Dashboard, choose a networks (e.g. Branch1)
-    - Choose Wireless->Configure->SSIDs
-    - ![Meraki Before](meraki-before.png)
-    - Network two should be `PSeudoCo-P101-BR1-CORP` if you are pod 101.  The `BR1` (if you chose the `Branch1` network) should be in the SSID.
-- On the "Jump Host", go to Chrome->Branch3-C9800L-WLC
-    - Log in with the POD credentials
-    - Nagivate to Configuration->Tags & Profiles->WLANs
-    - ![Meraki Before](wlc-before.png)
-    - The Corpoorate SSID should be `PSeudoCo-P101-BR3-CORP`
+  
 ### Now push the change out.
 - set the  `MERAKI_DASHBOARD_API_KEY` environment variable.
     ```
     export MERAKI_DASHBOARD_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     ```
 - cd into `terraform/wireless`
+- Run `terraform plan` and see that the change was detected:
+    ```
+    terraform workspace new dcloud
+    ```
 - run `terraform init`
 
     ```
