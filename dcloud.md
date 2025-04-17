@@ -20,7 +20,7 @@ The dCloud pod is already setup with SSIDs, but the SSIDs are different for ever
 - VPN into the pod using the information provided in "Info->AnyConnect Credentials" and run from your workstation
 #### Clone this repo
 ```
-% git clone https://github.com/ciscops/mac.git
+% git clone https://github.com/cisco-dcloud-demo/campus-automation-demo.git
 ```
 #### Open `mac-data/dcloud.yaml` in the repo:
 - Change the `name` of ssid 1 to `PSeudoCo-P<Your POD number>-CORP` (i.e. Remove the `BR#`)
