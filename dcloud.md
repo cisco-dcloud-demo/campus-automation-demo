@@ -20,7 +20,7 @@ The dCloud pod is already setup with SSIDs, but the SSIDs are different for ever
 - VPN into the pod using the information provided in "Info->AnyConnect Credentials" and run from your workstation
 #### Clone this repo
 ```
-% git clone https://github.com/cisco-dcloud-demo/campus-automation-demo.git
+git clone https://github.com/cisco-dcloud-demo/campus-automation-demo.git
 ```
 #### Open `mac-data/dcloud.yaml` in the repo:
 - Change the `name` of ssid 1 to `PSeudoCo-P<Your POD number>-CORP` (i.e. Remove the `BR#`)
@@ -40,13 +40,15 @@ The dCloud pod is already setup with SSIDs, but the SSIDs are different for ever
 ### Now push the change out.
 - set the  `MERAKI_DASHBOARD_API_KEY` environment variable.
     ```
-    export MERAKI_DASHBOARD_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`
+    export MERAKI_DASHBOARD_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     ```
 - cd into `terraform/wireless`
 - run `terraform init`
 
     ```
-    % terraform init
+    terraform init
+    ```
+    ```
 
     Initializing the backend...
     Initializing modules...
@@ -68,6 +70,9 @@ The dCloud pod is already setup with SSIDs, but the SSIDs are different for ever
     commands will detect it and remind you to do so if necessary.
     ```
 - run `terraform plan`.  You should see the two changes that the modules will make:
+    ```
+    terraform plan
+    ```  
     ```
     Terraform will perform the following actions:
 
@@ -115,6 +120,9 @@ The dCloud pod is already setup with SSIDs, but the SSIDs are different for ever
     Plan: 0 to add, 2 to change, 0 to destroy.
     ```
 - run `terraform apply`.  After you confirm the changes by typing `yes`, you should see it push out a change to the Meraki Dashboard and the WLC.
+    ```
+    terraform apply
+    ```
     ```
     Enter a value: yes
 
