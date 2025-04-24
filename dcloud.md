@@ -169,7 +169,7 @@ git clone https://github.com/cisco-dcloud-demo/campus-automation-demo.git
 
     Terraform has compared your real infrastructure against your configuration and found no differences, so no changes are needed.
     ```
-### Make an out-of-band change and verify that Terraform cathes it.
+### Make an out-of-band change and verify that Terraform catches it.
 - On the "Jump Host", go to Chrome->Branch3-C9800L-WLC
     - Log in with the POD credentials
     - Nagivate to Configuration->Tags & Profiles->WLANs
