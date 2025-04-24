@@ -8,7 +8,7 @@ ssids:
       enabled: true
       authMode: psk
       psk: ""
-      # encryptionMode: wpa-eap
+      encryptionMode: wpa
       wpaEncryptionMode: WPA2 only
       ipAssignmentMode: Bridge mode
       useVlanTagging: false
