@@ -47,11 +47,7 @@ git clone https://github.com/cisco-dcloud-demo/campus-automation-demo.git
     export MERAKI_DASHBOARD_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     ```
 - cd into `terraform/wireless`
-- Run `terraform plan` and see that the change was detected:
-    ```
-    terraform workspace new dcloud
-    ```
-- run `terraform init`
+- Run `terraform init`
 
     ```
     terraform init
@@ -77,7 +73,11 @@ git clone https://github.com/cisco-dcloud-demo/campus-automation-demo.git
     rerun this command to reinitialize your working directory. If you forget, other
     commands will detect it and remind you to do so if necessary.
     ```
-- run `terraform plan`.  You should see the two changes that the modules will make:
+- Run `terraform workspace new dcloud` to set the workspace name:
+    ```
+    terraform workspace new dcloud
+    ```
+- Run `terraform plan`.  You should see the two changes that the modules will make:
     ```
     terraform plan
     ```  
